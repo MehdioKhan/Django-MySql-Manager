@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+{#    <link rel="stylesheet" href={% static 'algorithm/css/bootstrap.min.css' %}>#}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <title>MySQL Manager</title>
+    <style>
+        textarea {
+            resize: none;
+        }
+    </style>
+</head>
+<body>
+<div role="tabpanel">
+  <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active"><a href="#home1" data-toggle="tab" role="tab" aria-controls="tab1">Database</a></li>
+    <li role="presentation"><a href="#paneTwo1" data-toggle="tab" role="tab" aria-controls="tab2">Tables</a></li>
+    <li role="presentation"><a href="#paneTwo2" data-toggle="tab" role="tab" aria-controls="tab3">Views</a></li>
+      <li role="presentation"><a href="#paneTwo3" data-toggle="tab" role="tab" aria-controls="tab4">Queries</a></li>
+  </ul>
+  <div id="tabContent1" class="tab-content">
+  <!--Tab 1 - Connect start -->
+    <div role="tabpanel" class="tab-pane fade in active" id="home1">
+        <div class="container" style="width:600px;">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <h4>Set database info</h4>
+                    </div>
+                </div>
+                <div class="panel-body">
+                        {% csrf_token %}
+                        <table class="table table-responsive">
+                            <tr>
+                                <td>Hostname</td>
+                                <td><input type="text" class="form-control" id="host" placeholder="example: 127.0.0.1" autofocus/></td>
+                            </tr>
+                            <tr>
+                                <td>Port</td>
+                                <td><input type="text" class="form-control" id="port" value="3306" /></td>
+                            </tr>
+                            <tr>
+                                <td>Username</td>
+                                <td><input type="text" class="form-control" id="username" /></td>
+                            </tr>
+                            <tr>
+                                <td>Password</td>
+                                <td><input type="password" class="form-control" id="password" /></td>
+                            </tr>
+                            <tr>
+                                <td>Database Name</td>
+                                <td><input type="text" class="form-control" id="dbname" /></td>
+                            </tr>
+                            <tr class="hidden" id="database_message">
+                            </tr>
+                        </table>
+                        <input type="submit" class="btn btn-primary" id="setdatabase" value="Set database" />
+                </div>
+            </div>
+        </div>
+    </div>
+  <!--Tab 1 - Connect end -->
+  <!--Tab 2 - Tables start -->
+    <div role="tabpanel" class="tab-pane fade" id="paneTwo1">
+        <div class="col-md-2">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <h4>Tables</h4>
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-responsive">
+                {% csrf_token %}
+                    <div id="tables">
+
+                    </div>
+                    <tr>
+                        <td><input type="submit" class="btn btn-default" id="table_refresh" value="Refresh" /></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+          <div class="col-md-10">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <h4>Data</h4>
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-responsive" id="table_data">
+                </table>
+            </div>
+        </div>
+    </div>
+    </div>
+  <!--Tab 2 - Tables end -->
+  <!--Tab 3 - Views start -->
+    <div role="tabpanel" class="tab-pane fade" id="paneTwo2">
+      <div class="col-md-2">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <h4>Views</h4>
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-responsive">
+                {% csrf_token %}
+                    <div id="views">
+
+                    </div>
+                    <tr>
+                        <td><input type="submit" class="btn btn-default" id="view_refresh" value="Refresh" /></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+          <div class="col-md-10">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <h4>Data</h4>
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-responsive" id="view_data">
+
+                </table>
+            </div>
+        </div>
+    </div>
+    </div>
+  <!--Tab 3 - Views end -->
+  <!--Tab 4 - Queries start -->
+      <div role="tabpanel" class="tab-pane fade" id="paneTwo3">
+        <div class="container">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <h4>Execute Query</h4>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <h5>Query</h5>
+                    <table class="table table-responsive">
+                        {% csrf_token %}
+                        <tr>
+                            <td><textarea class="form-control" id="query" cols="10" rows="10"></textarea> </td>
+                        </tr>
+                        <tr class="hidden" id="query_error">
+
+                        </tr>
+                    </table>
+                    <center><input type="submit" class="btn btn-default" id="execute" value="Execute"/></center>
+                    <table class="table table-striped" id="query_output">
+
+                    </table>
+                </div>
+            </div>
+      </div>
+  <!--Tab 4 - Queries end -->
+  </div>
+  </div>
+</div>
+</body>
+{#<script src={% static 'algorithm/js/jquery.min.js' %}></script>#}
+{#<script src={% static 'algorithm/js/bootstrap.min.js' %}></script>#}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script>
+    $('#setdatabase').click(function () {
+        if(!($('#host').val() && $('#port').val() && $('#username').val() && $('#password').val() && $('#dbname').val())) {
+            $('#database_message').html('<td>Error</td><td>Dont leave any field blank</td>')
+            $('#database_message').removeClass('hidden')
+        }
+        else{
+            $('#database_message').addClass('hidden')
+            $.ajax({
+                type: 'POST',
+                url : '/setdatabase/',
+                dataType: 'json',
+                data: {
+                    'host': $('#host').val(),
+                    'port': $('#port').val(),
+                    'username': $('#username').val(),
+                    'password': $('#password').val(),
+                    'dbname': $('#dbname').val(),
+                    'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+                },
+                success: function (data) {
+                    var html = ''
+                    //set tables list
+                    if(data.tables) {
+                        for (var i = 0; i < data.tables.length; i++)
+                            html += '<tr><td><div class="form-check"><input class="form-check-input" name="table_name" type="radio" id="' +
+                                data.tables[i] + '" value="' + data.tables[i] + '"><label class="form-check-label" ' +
+                                'for="' + data.tables[i] + '">' + data.tables[i] + '</label></div></td></tr>'
+                    }else
+                        html='There is no table in this database'
+                    $('#tables').html(html)
+                    html = ''
+                    //set views list
+                    if(data.views) {
+                        for (var i = 0; i < data.views.length; i++)
+                            html += '<tr><td><div class="form-check"><input class="form-check-input" name="view_name" type="radio" id="' +
+                                data.views[i] + '" value="' + data.views[i] + '"><label class="form-check-label" ' +
+                                'for="' + data.views[i] + '">' + data.views[i] + '</label></div></td></tr>'
+                    }else
+                        html = 'There is no view in this database'
+                    $('#views').html(html)
+                    $('#database_message').html('<td>Message</td><td>'+data.message+'</td>')
+                    $('#database_message').removeClass('hidden')
+                }
+            })
+        }
+    });
+</script>
+<script>
+    $('#table_refresh').click(function () {
+        var table = []
+        $("input[name='table_name']:checked").each(function () {
+            table.push(this.value);
+        });
+        if(!table.length)
+            $('#error').text("Please choose one table")
+        else{
+            $.ajax({
+                type: 'POST',
+                url : '/table/',
+                dataType: 'json',
+                data: {
+                    'table': table,
+                    'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+                },
+                success: function (data) {
+                    var html = '<thead>'
+                    for(var i=0;i<data.columns.length;i++)
+                        html+='<th class="row">'+data.columns[i]+'</th>'
+                    html+='</thead>'
+                    for(var i=0;i<data.data.length;i++) {
+                        html += '<tr id="row' + i + '">'
+                        for (var j = 0; j < data.data[i].length; j++)
+                            html += '<td>' + data.data[i][j] + '</td>'
+                        html+='</tr>'
+                    }
+                    $('#table_data').html(html)
+                }
+            })
+        }
+    });
+</script>
+<script>
+    $('#view_refresh').click(function () {
+        var view = []
+        $("input[name='view_name']:checked").each(function () {
+            view.push(this.value);
+        });
+        if(!view.length)
+            $('#error').text("Please choose one table")
+        else{
+            $.ajax({
+                type: 'POST',
+                url : '/view/',
+                dataType: 'json',
+                data: {
+                    'view': view,
+                    'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+                },
+                success: function (data) {
+                    var html = '<thead>'
+                    for(var i=0;i<data.columns.length;i++)
+                        html+='<th class="row">'+data.columns[i]+'</th>'
+                    html+='</thead>'
+                    for(var i=0;i<data.data.length;i++) {
+                        html += '<tr id="row' + i + '">'
+                        for (var j = 0; j < data.data[i].length; j++)
+                            html += '<td>' + data.data[i][j] + '</td>'
+                        html+='</tr>'
+                    }
+                    $('#view_data').html(html)
+                }
+            })
+        }
+    });
+</script>
+<script>
+    $('#execute').click(function () {
+        if(!$('#query').val()) {
+            $('#query_output').html('<td>Errors</td><td>Please enter a query first.</td>')
+{#            $('#query_error').removeClass('hidden')#}
+        }else {
+{#            $('#query_error').addClass('hidden')#}
+            $.ajax({
+                type: 'POST',
+                url: '/query/',
+                dataType: 'json',
+                data: {
+                    'query': $('#query').val(),
+                    'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+                },
+                success: function (data) {
+                    if(data.message.length==0){
+                        var html = '<thead>'
+                        for(var i=0;i<data.columns.length;i++)
+                            html+='<th class="row">'+data.columns[i]+'</th>'
+                        html+='</thead>'
+                        for(var i=0;i<data.data.length;i++) {
+                            html += '<tr id="row' + i + '">'
+                            for (var j = 0; j < data.data[i].length; j++)
+                                html += '<td>' + data.data[i][j] + '</td>'
+                            html+='</tr>'
+                        }
+                        $('#query_output').html(html)
+                    }
+                    else{
+{#                        $('#query_output').removeClass('hidden')#}
+                        $('#query_output').html('<td>'+data.message+'</td>')
+                    }
+
+                }
+            })
+        }
+    })
+</script>
+</html>
